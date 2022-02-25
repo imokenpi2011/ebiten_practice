@@ -2,8 +2,9 @@ package main
 
 import (
 	"bytes"
-	_ "embed"
+	_ "embed" // ファイルから自動登録する
 	"image"
+	_ "image/png" // 画像のエンコードに必要
 	"log"
 	"math/rand"
 	"time"
@@ -15,8 +16,9 @@ import (
 )
 
 const (
-	screenX = 640
-	screenY = 480
+	screenX  = 640
+	screenY  = 480
+	fontSize = 10
 )
 
 //go:embed resources/images/dinosaur_01.png
@@ -45,6 +47,7 @@ var (
 
 // 初期処理
 func init() {
+	log.Println("Init func.")
 	// シード値の生成
 	rand.Seed(time.Now().UnixNano())
 
@@ -95,6 +98,9 @@ func init() {
 		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // ゲームのインターフェース
