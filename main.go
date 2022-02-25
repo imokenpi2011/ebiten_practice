@@ -1,11 +1,17 @@
 package main
 
 import (
+	"bytes"
 	_ "embed"
+	"image"
 	"log"
+	"math/rand"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 const (
@@ -36,6 +42,60 @@ var (
 	groundImg    *ebiten.Image
 	arcadeFont   font.Face
 )
+
+// 初期処理
+func init() {
+	// シード値の生成
+	rand.Seed(time.Now().UnixNano())
+
+	// ファイルをバイトで読み込み、imageとしてデコードする
+	// byteDinosaur1Imgの読み込み
+	img, _, err := image.Decode(bytes.NewReader(byteDinosaur1Img))
+	if err != nil {
+		log.Fatal(err)
+	}
+	dinosaur1Img = ebiten.NewImageFromImage(img)
+
+	// byteDinosaur2Imgの読み込み
+	img, _, err = image.Decode(bytes.NewReader(byteDinosaur2Img))
+	if err != nil {
+		log.Fatal(err)
+	}
+	dinosaur2Img = ebiten.NewImageFromImage(img)
+
+	// byteTreeSmallImgの読み込み
+	img, _, err = image.Decode(bytes.NewReader(byteTreeSmallImg))
+	if err != nil {
+		log.Fatal(err)
+	}
+	treeSmallImg = ebiten.NewImageFromImage(img)
+
+	// byteTreeBigImgの読み込み
+	img, _, err = image.Decode(bytes.NewReader(byteTreeBigImg))
+	if err != nil {
+		log.Fatal(err)
+	}
+	treeBigImg = ebiten.NewImageFromImage(img)
+
+	// byteGroundImgの読み込み
+	img, _, err = image.Decode(bytes.NewReader(byteGroundImg))
+	if err != nil {
+		log.Fatal(err)
+	}
+	groundImg = ebiten.NewImageFromImage(img)
+
+	// フォントの読み込み
+	tt, err := opentype.Parse(fonts.PressStart2P_ttf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	const dpi = 72
+	arcadeFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    fontSize,
+		DPI:     dpi,
+		Hinting: font.HintingFull,
+	})
+}
 
 // ゲームのインターフェース
 type Game struct{}
